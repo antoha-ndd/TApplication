@@ -32,7 +32,7 @@ void Pairing()
 
 void EmptryEvent() {};
 
-unsigned long int EmptyTimer() { return 0; };
+unsigned long int EmptyTimer() { return millis(); };
 unsigned long int (*GetTimerValue)(){EmptyTimer};
 
 ObjectId LastObjectId{0};
@@ -152,12 +152,19 @@ public:
 		ActiveControls = new TStack<TActiveControl *>();
 
 #if defined(ESP8266)
+
+		WiFi.begin();
+		WiFiManager wifiManager;
+		wifiManager.setDebugOutput(false);
+		wifiManager.autoConnect("AutoConnectAP");
+
 		ArduinoOTA.setPort(8266);
 		ArduinoOTA.setHostname("ESP_Board");
 		ArduinoOTA.setPassword("8764956");
 		ArduinoOTA.begin(true);
 
 #endif
+
 	}
 
 	~TApplication() {}
@@ -199,19 +206,7 @@ public:
 		Tick = 0;
 		DoStop = false;
 		isRun = true;
-#if defined(ESP8266)
 
-		WiFi.begin();
-		/*WiFiManager wifiManager;
-		wifiManager.setDebugOutput(false);
-		wifiManager.wifiManager.autoConnect("AutoConnectAP");*/
-
-		ArduinoOTA.setPort(8266);
-		ArduinoOTA.setHostname("ESP_Board");
-		ArduinoOTA.setPassword("8764956");
-		ArduinoOTA.begin(true);
-
-#endif
 	}
 
 	void (*OnIdle)(){EmptryEvent};
